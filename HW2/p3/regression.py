@@ -241,18 +241,11 @@ print "# Part 3.4 #"
 for i in range(0, numAttr):
     for j in range(i, numAttr):
         new = np.multiply(normTrainAttr[:,i],normTrainAttr[:,j])#scalar multiplication to get a new feature
-        #newT = np.multiply(testAttr[:,i], testAttr[:,j])  # scalar multiplication
         newStd = np.std(new, axis=0) * (numTrain / (numTrain - 1))
-        #newTStd = np.std(newT, axis=0) * (numTest / (numTest - 1))
         if newStd == 0.0:
             newStd = 0.1
-        #if newTStd == 0.0:
-        #   newTStd = 0.1
         newNorm = (new - np.mean(new, axis=0)) / newStd
-        #newTNorm = (newT - np.mean(newT, axis=0)) / newTStd
         X = np.column_stack((X,newNorm))
-        #Xtest = np.column_stack((Xtest, newTNorm))
-print X.shape
 for i in range(0, numAttr):
     for j in range(i, numAttr):
         new = np.multiply(normTestAttr[:,i],normTestAttr[:,j])#scalar multiplication to get a new feature
