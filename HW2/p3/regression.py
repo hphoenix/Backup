@@ -127,7 +127,7 @@ for i in range(k):
 CVTrainIndex = []
 MSETrain = np.zeros(10)
 MSETest = np.zeros(10)
-numSteps = 5
+numSteps = 10
 avgMSETest = np.zeros(numSteps)
 lambd = np.linspace(0.0001, 10, numSteps)
 for i in range(numSteps):
@@ -192,7 +192,7 @@ print 'MSE for Linear Regression on Training dataset is:\t', MSELR(normTrainTarg
 print 'MSE for Linear Regression on Test dataset is:\t', MSELR(normTestTarg, predictTest)
 # recursive correlation
 print "# part 3.3(b) #"
-features = {1:'CRIM',2:'ZEN',3:'INDUS',4:'CHAS',5:'NOX',6:'RM',7:'AGE',8:'DIS',9:'RAD',10:'TAX',11:'PTRARIO',12:'B',13:'LSTAT'}
+features = {1:'CRIM',2:'ZEN',3:'INDUS',4:'CHAS',5:'NOX',6:'RM',7:'AGE',8:'DIS',9:'RAD',10:'TAX',11:'PTRATIO',12:'B',13:'LSTAT'}
 residue = normTrainTarg
 trainAttr3b = np.column_stack((X[:,0],X[:,13]))
 testAttr3b = np.column_stack((Xtest[:,0],Xtest[:,13]))
@@ -232,8 +232,36 @@ for i in range(1,numAttr+1):
 trainAttr3c = np.column_stack((X[:, 0], X[:, best[0]], X[:, best[1]], X[:, best[2]], X[:, best[3]]))
 testAttr3c = np.column_stack((Xtest[:, 0], Xtest[:, best[0]], Xtest[:, best[1]], Xtest[:, best[2]], Xtest[:, best[3]]))
 predictTrain, predictTest = LR(trainAttr3c, testAttr3c, normTrainTarg)
+print 'The four features after brute force aproach are:', features[best[0]], features[best[1]], features[best[2]], features[best[3]]
 print 'MSE for Linear Regression on Training dataset is:\t', bestMSETrain
+#print 'MSE for Linear Regression on Training dataset is:\t', MSELR(normTrainTarg, predictTrain)
+print 'MSE for Linear Regression on Test dataset is:\t', MSELR(normTestTarg, predictTest)
+# Polynomial Feature Expansion
+print "# Part 3.4 #"
+for i in range(0, numAttr):
+    for j in range(i, numAttr):
+        new = np.multiply(normTrainAttr[:,i],normTrainAttr[:,j])#scalar multiplication to get a new feature
+        #newT = np.multiply(testAttr[:,i], testAttr[:,j])  # scalar multiplication
+        newStd = np.std(new, axis=0) * (numTrain / (numTrain - 1))
+        #newTStd = np.std(newT, axis=0) * (numTest / (numTest - 1))
+        if newStd == 0.0:
+            newStd = 0.1
+        #if newTStd == 0.0:
+        #   newTStd = 0.1
+        newNorm = (new - np.mean(new, axis=0)) / newStd
+        #newTNorm = (newT - np.mean(newT, axis=0)) / newTStd
+        X = np.column_stack((X,newNorm))
+        #Xtest = np.column_stack((Xtest, newTNorm))
+print X.shape
+for i in range(0, numAttr):
+    for j in range(i, numAttr):
+        new = np.multiply(normTestAttr[:,i],normTestAttr[:,j])#scalar multiplication to get a new feature
+        newStd = np.std(new, axis=0) * (numTest / (numTest - 1))
+        if newStd == 0.0:
+            newStd = 0.1
+        newNorm = (new - np.mean(new, axis=0)) / newStd
+        Xtest = np.column_stack((Xtest,newNorm))
+print Xtest.shape
+predictTrain,predictTest = LR(X, Xtest, normTrainTarg)
 print 'MSE for Linear Regression on Training dataset is:\t', MSELR(normTrainTarg, predictTrain)
 print 'MSE for Linear Regression on Test dataset is:\t', MSELR(normTestTarg, predictTest)
-
-
