@@ -31,13 +31,18 @@ for i in range(506):
 ### Histogram
 corr = np.zeros(numAttr)
 for i in range(numAttr):
+    plt.subplot(5, 3, i + 1)
     plt.hist(trainAttr[:,i],bins=10)
     #plt.show() # Clear previous figure
-    plt.savefig('histogram'+ str(i)+'.pdf', format='pdf')
-    plt.clf()
+    #plt.savefig('histogram'+ str(i)+'.pdf', format='pdf')
+    #plt.clf()
     ret =  sp.stats.pearsonr(trainAttr[:,i], trainTarg[:]) # correlation
     corr[i] = ret[0]
     #print ret[0]
+plt.show()
+plt.clf()
+print "Part 1:"
+print "Pearson correlation coefficients for attributees are : \t", corr
 ### Data Preprocessing. Standardization
 ### Mean and N-1 Std dev
 #def procStd(dataset): #To handle stdev of 0
@@ -254,7 +259,7 @@ for i in range(0, numAttr):
             newStd = 0.1
         newNorm = (new - np.mean(new, axis=0)) / newStd
         Xtest = np.column_stack((Xtest,newNorm))
-print Xtest.shape
+#print Xtest.shape
 predictTrain,predictTest = LR(X, Xtest, normTrainTarg)
 print 'MSE for Linear Regression on Training dataset is:\t', MSELR(normTrainTarg, predictTrain)
 print 'MSE for Linear Regression on Test dataset is:\t', MSELR(normTestTarg, predictTest)
