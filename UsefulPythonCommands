@@ -1,0 +1,2 @@
+numpy.random.shuffle() # inplace shuffle of array
+numpy.array_split(,N) # split the array into N parts
